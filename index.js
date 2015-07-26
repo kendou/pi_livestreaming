@@ -26,7 +26,7 @@ io.on('connection', function(socket) {
 
   socket.on('disconnect', function() {
     delete sockets[socket.id];
-    console.log("Total clients connected : ", Object,keys(sockets).length);
+    console.log("Total clients connected : ", Object.keys(sockets).length);
 
     // no more sockets, kill the stream
     if (Object.keys(sockets).length == 0) {
@@ -70,6 +70,7 @@ function startStreaming(io) {
   app.set('watchingFile', true);
 
   fs.watchFile('public/img/image_stream.jpg', function(current, previous) {
+    console.log("New image emitted ...");
     io.sockets.emit('liveStream', 'img/image_stream.jpg?_t=' + (Math.random() * 100000));
   })
 
