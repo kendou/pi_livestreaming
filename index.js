@@ -31,7 +31,7 @@ io.on('connection', function(socket) {
     if (Object.keys(sockets).length == 0) {
       app.set('watchingFile', false);
       if (proc) proc.kill();
-      fs.unwatchFile('/tmpfiles/image_stream.jpg');
+      fs.unwatchFile('public/img/image_stream.jpg');
     }
   });
 
@@ -60,15 +60,15 @@ function startStreaming(io) {
     return;
   }
 
-  var args = ["-w", "640", "-h", "480", "-o", "/tmpfiles/image_stream.jpg", "-t", "999999999", "-tl", "100"];
+  var args = ["-w", "640", "-h", "480", "-o", "public/img/image_stream.jpg", "-t", "999999999", "-tl", "100"];
   proc = spawn('raspistill', args);
 
   console.log('Watching for changes...');
 
   app.set('watchingFile', true);
 
-  fs.watchFile('/tmpfiles/image_stream.jpg', function(current, previous) {
-    io.sockets.emit('liveStream', 'image_stream.jpg?_t=' + (Math.random() * 100000));
+  fs.watchFile('public/img/image_stream.jpg', function(current, previous) {
+    io.sockets.emit('liveStream', 'img/image_stream.jpg?_t=' + (Math.random() * 100000));
   })
 
 }
