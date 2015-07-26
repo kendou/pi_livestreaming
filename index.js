@@ -70,8 +70,10 @@ function startStreaming(io) {
   app.set('watchingFile', true);
 
   fs.watchFile('public/img/image_stream.jpg', function(current, previous) {
-    console.log("New image emitted ...");
-    io.sockets.emit('liveStream', 'img/image_stream.jpg?_t=' + (Math.random() * 100000));
+    var now = (new Date()).getTime();
+    console.log("New image emitted " + now.toString());
+//    io.sockets.emit('liveStream', 'img/image_stream.jpg?_t=' + (Math.random() * 100000));
+    io.sockets.emit('liveStream', 'img/image_stream.jpg?_t=' + now.toString());
   })
 
 }
