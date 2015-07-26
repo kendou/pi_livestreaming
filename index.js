@@ -26,9 +26,11 @@ io.on('connection', function(socket) {
 
   socket.on('disconnect', function() {
     delete sockets[socket.id];
+    console.log("Total clients connected : ", Object,keys(sockets).length);
 
     // no more sockets, kill the stream
     if (Object.keys(sockets).length == 0) {
+      console.log("No more sockets exist, killing the stream ...");
       app.set('watchingFile', false);
       if (proc) proc.kill();
       fs.unwatchFile('public/img/image_stream.jpg');
