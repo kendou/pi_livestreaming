@@ -30,9 +30,13 @@ io.on('connection', function(socket) {
 
     // no more sockets, kill the stream
     if (Object.keys(sockets).length == 0) {
-      console.log("No more sockets exist, killing the stream ...");
+      console.log("No more sockets exist, stopping the stream ...");
       app.set('watchingFile', false);
-      if (proc) proc.kill();
+      if (proc) {
+        console.log("Stopping the camera ...");
+        proc.kill();
+        proc = null;
+      }
       fs.unwatchFile('public/img/image_stream.jpg');
     }
   });
