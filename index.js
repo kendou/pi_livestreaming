@@ -74,7 +74,7 @@ function stopStreaming() {
 function startStreaming(io) {
 
   if (app.get('watchingFile')) {
-    io.sockets.emit('liveStream', imgUrlPath);
+    io.sockets.emit('liveStream', imgUrlPath + '?_t=' + (Math.random() * 100000));
     return;
   }
 
@@ -101,10 +101,9 @@ function startStreaming(io) {
     }
     else if( 'rename' === event) {
       //rewatch the file, otherwise the 'change' event only fire once.
-/*      if(fileWatcher){
+      if(fileWatcher){
         fileWatcher.close();
       }
-*/
       fileWatcher = fs.watch(imgPath, {persistent: true}, watchCallback);
     }
 
