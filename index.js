@@ -41,7 +41,10 @@ io.on('connection', function(socket) {
         proc = null;
       }
 //      fs.unwatchFile(imgPath);
-      fileWatcher.close();
+      if(fileWatcher){
+        fileWatcher.close();
+        fileWatcher = null;
+      }
     }
   });
 
@@ -61,7 +64,10 @@ function stopStreaming() {
     app.set('watchingFile', false);
     if (proc) proc.kill();
 //    fs.unwatchFile(imgPath);
-    fileWatcher.close();
+    if(fileWatcher){
+      fileWatcher.close();
+      fileWatcher = null;
+    }
   }
 }
 
