@@ -16,6 +16,8 @@
     margin: 0px auto;
     display: block;
     margin-top: 20px;
+    max-width: 100%;
+    max-height: 100%;
   }
   </style>
 
@@ -25,10 +27,44 @@
   <script src="js/bootstrap.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script>
-  var socket = io();
+  var socket = new io.connect({
+    'reconnection': true,
+    'reconnectionDelay': 1000,
+    'reconnectionDelayMax' : 5000,
+    'reconnectionAttempts': 5
+  });
+
   socket.on('liveStream', function(url) {
     $('#stream').attr('src', url);
     $('.start').hide();
+  });
+
+  socket.on('connect', function(){
+    console.log("Connected.");
+  });
+
+  socket.on('connect_error', function(error){
+    console.log("Connection error: " + error.toString());
+  });
+
+  socket.on('connect_timeout', function(){
+    console.log("Connect timeout.")
+  });
+
+  socket.on('reconnect', function(reconnectNum){
+    console.log("Reconnected after " + reconnectNum + " retries.");
+  });
+
+  socket.on('reconnecting', function(reconnectNum){
+    console.log("Reconnection attempt number:" + reconnectNum);
+  });
+
+  socket.on('reconnect_error', function(error){
+    console.log("Reconnection error: " + error.toString());
+  });
+
+  socket.on('reconnect_failed', function(){
+    console.log("Reconnection failed.");
   });
 
   function startStream() {
