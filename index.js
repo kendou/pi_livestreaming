@@ -87,10 +87,12 @@ function startStreaming(io) {
   })
   */
   //Change from watchFile to watch
-  fileWatcher = fs.watch(imgPath, function(event, filename) {
-    var now = new Date();
-    console.log("New image emitted " + now.toTimeString());
-    io.sockets.emit('liveStream', imgUrlPath + '?_t=' + now.toTimeString());
+  fileWatcher = fs.watch(imgPath, {persistent: true}, function(event, filename) {
+    if( 'change' === event) {
+      var now = new Date();
+      console.log("New image emitted " + now.toTimeString());
+      io.sockets.emit('liveStream', imgUrlPath + '?_t=' + now.toTimeString());
+    }
   });
 
 
