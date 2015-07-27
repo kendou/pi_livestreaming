@@ -41,7 +41,7 @@ io.on('connection', function(socket) {
         proc = null;
       }
 //      fs.unwatchFile(imgPath);
-      fileWatcher.unwatch();
+      fileWatcher.close();
     }
   });
 
@@ -61,7 +61,7 @@ function stopStreaming() {
     app.set('watchingFile', false);
     if (proc) proc.kill();
 //    fs.unwatchFile(imgPath);
-    fileWatcher.unwatch();
+    fileWatcher.close();
   }
 }
 
@@ -95,7 +95,7 @@ function startStreaming(io) {
     }
     else if( 'rename' === event) {
       //rewatch the file, otherwise the 'change' event only fire once.
-      fileWatcher.unwatch();
+      fileWatcher.close();
       fileWatcher = fs.watch(imgPath, {persistent: true}, watchCallback);
     }
 
