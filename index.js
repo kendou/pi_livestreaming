@@ -74,11 +74,11 @@ function stopStreaming() {
 function startStreaming(io) {
 
   if (app.get('watchingFile')) {
-    io.sockets.emit('liveStream', 'image_stream.jpg?_t=' + (Math.random() * 100000));
+    io.sockets.emit('liveStream', imgUrlPath + '?_t=' + (Math.random() * 100000));
     return;
   }
 
-  var args = ["-w", "320", "-h", "240", "-o", "public/img/image_stream.jpg", "-t", "999999999", "-tl", "500"];
+  var args = ["-w", "320", "-h", "240", "-o", imgPath, "-t", "999999999", "-tl", "300"];
   proc = spawn('raspistill', args);
 
   console.log('Watching for changes...');
@@ -101,7 +101,9 @@ function startStreaming(io) {
     }
     else if( 'rename' === event) {
       //rewatch the file, otherwise the 'change' event only fire once.
-      fileWatcher.close();
+      if(fileWatcher){
+        fileWatcher.close();
+      }
       fileWatcher = fs.watch(imgPath, {persistent: true}, watchCallback);
     }
 
