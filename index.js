@@ -78,7 +78,7 @@ function startStreaming(io) {
     return;
   }
 
-  var args = ["-w", "320", "-h", "240", "-o", "public/img/image_stream.jpg", "-t", "999999999", "-tl", "300"];
+  var args = ["-w", "320", "-h", "240", "-o", "public/img/image_stream.jpg", "-t", "999999999", "-tl", "500"];
   proc = spawn('raspistill', args);
 
   console.log('Watching for changes...');
