@@ -1,8 +1,7 @@
 
-.idea/workspace.xml
+# idea IDE files
+.idea/
 
-.idea/workspace.xml
+# node.js modules
+node_modules/
 
-.idea/jsLibraryMappings.xml
-
-.idea/pi_livestreaming.iml
