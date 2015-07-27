@@ -7,6 +7,9 @@ var path = require('path');
 
 var spawn = require('child_process').spawn;
 var proc;
+var fileWatcher = null;
+var imgPath = "public/img/image_stream.jpg";
+var imgUrlPath = "img/image_stream.jpg";
 
 //app.use('/', express.static(path.join(__dirname, 'stream')));
 app.use(express.static(__dirname + '/public'));
@@ -37,7 +40,8 @@ io.on('connection', function(socket) {
         proc.kill();
         proc = null;
       }
-      fs.unwatchFile('public/img/image_stream.jpg');
+//      fs.unwatchFile(imgPath);
+      fileWatcher.unwatch();
     }
   });
 
@@ -55,7 +59,8 @@ function stopStreaming() {
   if (Object.keys(sockets).length == 0) {
     app.set('watchingFile', false);
     if (proc) proc.kill();
-    fs.unwatchFile('/tmpfiles/image_stream.jpg');
+//    fs.unwatchFile(imgPath);
+    fileWatcher.unwatch();
   }
 }
 
@@ -73,11 +78,19 @@ function startStreaming(io) {
 
   app.set('watchingFile', true);
 
-  fs.watchFile('public/img/image_stream.jpg', function(current, previous) {
+  /*
+  fs.watchFile(imgPath, function(current, previous) {
     var now = new Date();
     console.log("New image emitted " + now.toTimeString());
-//    io.sockets.emit('liveStream', 'img/image_stream.jpg?_t=' + (Math.random() * 100000));
-    io.sockets.emit('liveStream', 'img/image_stream.jpg?_t=' + now.toTimeString());
+    io.sockets.emit('liveStream', imgUrlPath + '?_t=' + now.toTimeString());
   })
+  */
+  //Change from watchFile to watch
+  fileWatcher = fs.watch(imgPath, function(event, filename) {
+    var now = new Date();
+    console.log("New image emitted " + now.toTimeString());
+    io.sockets.emit('liveStream', imgUrlPath + '?_t=' + now.toTimeString());
+  });
+
 
 }
