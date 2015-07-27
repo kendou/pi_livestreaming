@@ -41,10 +41,7 @@ io.on('connection', function(socket) {
         proc = null;
       }
 //      fs.unwatchFile(imgPath);
-      if(fileWatcher){
-        fileWatcher.close();
-        fileWatcher = null;
-      }
+      fileWatcher.close();
     }
   });
 
@@ -64,21 +61,18 @@ function stopStreaming() {
     app.set('watchingFile', false);
     if (proc) proc.kill();
 //    fs.unwatchFile(imgPath);
-    if(fileWatcher){
-      fileWatcher.close();
-      fileWatcher = null;
-    }
+    fileWatcher.close();
   }
 }
 
 function startStreaming(io) {
 
   if (app.get('watchingFile')) {
-    io.sockets.emit('liveStream', imgUrlPath + '?_t=' + (Math.random() * 100000));
+    io.sockets.emit('liveStream', 'image_stream.jpg?_t=' + (Math.random() * 100000));
     return;
   }
 
-  var args = ["-w", "320", "-h", "240", "-o", imgPath, "-t", "999999999", "-tl", "300"];
+  var args = ["-w", "320", "-h", "240", "-o", "public/img/image_stream.jpg", "-t", "999999999", "-tl", "500"];
   proc = spawn('raspistill', args);
 
   console.log('Watching for changes...');
@@ -101,9 +95,7 @@ function startStreaming(io) {
     }
     else if( 'rename' === event) {
       //rewatch the file, otherwise the 'change' event only fire once.
-      if(fileWatcher){
-        fileWatcher.close();
-      }
+      fileWatcher.close();
       fileWatcher = fs.watch(imgPath, {persistent: true}, watchCallback);
     }
 
