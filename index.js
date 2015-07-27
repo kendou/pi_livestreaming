@@ -57,6 +57,7 @@ http.listen(3000, function() {
 
 function stopStreaming() {
   if (Object.keys(sockets).length == 0) {
+    console.log("stopping streaming ...");
     app.set('watchingFile', false);
     if (proc) proc.kill();
 //    fs.unwatchFile(imgPath);
@@ -71,7 +72,7 @@ function startStreaming(io) {
     return;
   }
 
-  var args = ["-w", "320", "-h", "240", "-o", "public/img/image_stream.jpg", "-t", "999999999", "-tl", "500"];
+  var args = ["-w", "320", "-h", "240", "-o", "public/img/image_stream.jpg", "-t", "999999999", "-tl", "1005"];
   proc = spawn('raspistill', args);
 
   console.log('Watching for changes...');
