@@ -96,7 +96,7 @@ function startStreaming(io) {
   var watchCallback = function(event, filename){
     if( 'change' === event) {
       var now = new Date();
-      console.log("New image emitted " + now.toTimeString());
+//      console.log("New image emitted " + now.toTimeString());
       io.sockets.emit('liveStream', imgUrlPath + '?_t=' + now.toTimeString());
     }
     else if( 'rename' === event) {
