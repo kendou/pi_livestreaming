@@ -4,8 +4,9 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var fs = require('fs');
 var path = require('path');
-
+var process = require('process');
 var spawn = require('child_process').spawn;
+
 var proc;
 var fileWatcher = null;
 var imgPath = "public/img/image_stream.jpg";
@@ -14,6 +15,7 @@ var startStreaming;
 var stopStreaming;
 var startWatch;
 var stopWatch;
+var exitHandler;
 
 //////////////////////////////////////////////////////Begin utility methods
 stopStreaming = function() {
@@ -97,6 +99,18 @@ stopWatch = function(){
   }
   app.set('watchingFile', false);
 };
+
+
+exitHandler = function(options, err) {
+/*
+  if (options.cleanup) console.log('clean');
+  if (err) console.log(err.stack);
+  if (options.exit) process.exit();
+*/
+  console.log("node application exiting, cleaning up ...");
+  stopWatch();
+};
+
 ///////////////////////////////////////////////////////End Utility Methods
 
 //app.use('/', express.static(path.join(__dirname, 'stream')));
@@ -136,4 +150,13 @@ io.on('connection', function(socket) {
 http.listen(3000, function() {
   console.log('listening on *:3000');
 });
+
+//do something when app is closing
+process.on('exit', exitHandler.bind(null,{cleanup:true}));
+
+//catches ctrl+c event
+process.on('SIGINT', exitHandler.bind(null, {exit:true}));
+
+//catches uncaught exceptions
+process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
 
