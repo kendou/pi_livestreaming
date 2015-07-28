@@ -109,12 +109,13 @@ stopWatch = function(){
 //do something when app is closing
 process.on('SIGTERM', function(){
   console.log("node application exiting, cleaning up ...");
-  stopWatch();
+  stopStreaming();
   process.exit(0);
 });
 
 process.on('exit', function(code){
   console.log("node about to exit with code:" + code);
+  stopStreaming();
 });
 
 //app.use('/', express.static(path.join(__dirname, 'stream')));
