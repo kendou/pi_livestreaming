@@ -14,7 +14,6 @@ var startStreaming;
 var stopStreaming;
 var startWatch;
 var stopWatch;
-var exitHandler;
 
 //////////////////////////////////////////////////////Begin utility methods
 stopStreaming = function() {
@@ -99,27 +98,13 @@ stopWatch = function(){
   app.set('watchingFile', false);
 };
 
-
-exitHandler = function(options, err) {
-/*
-  if (options.cleanup) console.log('clean');
-  if (err) console.log(err.stack);
-  if (options.exit) process.exit();
-*/
-  console.log("node application exiting, cleaning up ...");
-  stopWatch();
-};
-
 ///////////////////////////////////////////////////////End Utility Methods
 
 //do something when app is closing
-process.on('exit', exitHandler.bind(null,{cleanup:true}));
-
-//catches ctrl+c event
-process.on('SIGINT', exitHandler.bind(null, {exit:true}));
-
-//catches uncaught exceptions
-process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
+process.on('SIGTERM', function(){
+  console.log("node application exiting, cleaning up ...");
+  stopWatch();
+});
 
 //app.use('/', express.static(path.join(__dirname, 'stream')));
 app.use(express.static(__dirname + '/public'));
