@@ -4,7 +4,8 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var fs = require('fs');
 var path = require('path');
-var spawn = require('child_process').spawn;
+var child_process = require('child_process');
+var spawn = child_process.spawn;
 
 var proc;
 var fileWatcher = null;
@@ -32,6 +33,9 @@ startStreaming = function(io) {
     io.sockets.emit('liveStream', imgUrlPath);
     return;
   }
+
+  //imgPath should exist otherwise the watch() call will fail.
+  child_process.execSync('touch ' + imgPath);
   /*
    "-w 320 -h 240": capturing 320 x 240 image
    "-o public/img/image_stream.jpg": output to public/img/image_stream.jpg. In our case, it's a Ramdisk(tmpfs)
@@ -84,7 +88,7 @@ startWatch = function(){
     }
   };
 
-  console.log("current directory:" + process.cwd() + ", about to watch: " + imgPath);
+  console.debug("current directory:" + process.cwd() + ", about to watch: " + imgPath);
   fileWatcher = fs.watch(imgPath, {persistent: true}, watchCallback);
   console.log("Start to watch the image file.");
   app.set('watchingFile', true);
