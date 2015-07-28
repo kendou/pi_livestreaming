@@ -89,7 +89,7 @@ startWatch = function(){
     }
   };
 
-  console.debug("current directory:" + process.cwd() + ", about to watch: " + imgPath);
+//  console.log("current directory:" + process.cwd() + ", about to watch: " + imgPath);
   fileWatcher = fs.watch(imgPath, {persistent: true}, watchCallback);
   console.log("Start to watch the image file.");
   app.set('watchingFile', true);
