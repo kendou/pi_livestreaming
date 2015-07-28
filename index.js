@@ -107,6 +107,10 @@ process.on('SIGTERM', function(){
   process.exit(0);
 });
 
+process.on('beforeExit', function(code){
+  console.log("node about to exit with code:" + code);
+});
+
 //app.use('/', express.static(path.join(__dirname, 'stream')));
 app.use(express.static(__dirname + '/public'));
 
