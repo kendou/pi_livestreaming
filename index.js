@@ -112,6 +112,15 @@ exitHandler = function(options, err) {
 
 ///////////////////////////////////////////////////////End Utility Methods
 
+//do something when app is closing
+process.on('exit', exitHandler.bind(null,{cleanup:true}));
+
+//catches ctrl+c event
+process.on('SIGINT', exitHandler.bind(null, {exit:true}));
+
+//catches uncaught exceptions
+process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
+
 //app.use('/', express.static(path.join(__dirname, 'stream')));
 app.use(express.static(__dirname + '/public'));
 
@@ -150,12 +159,5 @@ http.listen(3000, function() {
   console.log('listening on *:3000');
 });
 
-//do something when app is closing
-process.on('exit', exitHandler.bind(null,{cleanup:true}));
 
-//catches ctrl+c event
-process.on('SIGINT', exitHandler.bind(null, {exit:true}));
-
-//catches uncaught exceptions
-process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
 
