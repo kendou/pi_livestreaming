@@ -104,6 +104,7 @@ stopWatch = function(){
 process.on('SIGTERM', function(){
   console.log("node application exiting, cleaning up ...");
   stopWatch();
+  process.exit(0);
 });
 
 //app.use('/', express.static(path.join(__dirname, 'stream')));
