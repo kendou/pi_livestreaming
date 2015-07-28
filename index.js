@@ -107,7 +107,7 @@ process.on('SIGTERM', function(){
   process.exit(0);
 });
 
-process.on('beforeExit', function(code){
+process.on('exit', function(code){
   console.log("node about to exit with code:" + code);
 });
 
