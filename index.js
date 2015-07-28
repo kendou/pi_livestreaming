@@ -35,43 +35,44 @@ startStreaming = function(io) {
   }
 
   //imgPath should exist otherwise the watch() call will fail.
-  child_process.execSync('touch ' + imgPath);
-  /*
-   "-w 320 -h 240": capturing 320 x 240 image
-   "-o public/img/image_stream.jpg": output to public/img/image_stream.jpg. In our case, it's a Ramdisk(tmpfs)
-   "-t 999999999": run 999999999 miseconds. But somehow it stops outputing after about 2 hours
-   "-tl 1000": Timelapse mode, taking picture every 1000 misecond. Better to have a value greater than 500
-   "-n": no preview.
+  child_process.exec('touch ' + imgPath, function(){
+    /*
+     "-w 320 -h 240": capturing 320 x 240 image
+     "-o public/img/image_stream.jpg": output to public/img/image_stream.jpg. In our case, it's a Ramdisk(tmpfs)
+     "-t 999999999": run 999999999 miseconds. But somehow it stops outputing after about 2 hours
+     "-tl 1000": Timelapse mode, taking picture every 1000 misecond. Better to have a value greater than 500
+     "-n": no preview.
 
-   Other options:
-   "-q 50": jpeg quality 50%
-   "> /home/pi/camera.log 2>&1": logs
-   */
-  var args = ["-w", "320", "-h", "240", "-o", imgPath, "-t", "999999999", "-tl", "1000", "-n"];
-  proc = spawn('raspistill', args);
-  proc.stdout.on('data', function(data){
-    console.log("[raspistill] " + data);
-  });
-  proc.stderr.on('data', function(data){
-    console.log("[raspistill error] " + data);
-  });
-  proc.on('exit', function(code, signal){
-    //if "raspistill" process ends for any reason, stop watching
-    console.log("raspistill exited with code:" + code);
-    stopWatch();
-  });
+     Other options:
+     "-q 50": jpeg quality 50%
+     "> /home/pi/camera.log 2>&1": logs
+     */
+    var args = ["-w", "320", "-h", "240", "-o", imgPath, "-t", "999999999", "-tl", "1000", "-n"];
+    proc = spawn('raspistill', args);
+    proc.stdout.on('data', function(data){
+      console.log("[raspistill] " + data);
+    });
+    proc.stderr.on('data', function(data){
+      console.log("[raspistill error] " + data);
+    });
+    proc.on('exit', function(code, signal){
+      //if "raspistill" process ends for any reason, stop watching
+      console.log("raspistill exited with code:" + code);
+      stopWatch();
+    });
 
-  console.log('Watching for changes...');
+    console.log('Watching for changes...');
 
-  /*
-   fs.watchFile(imgPath, function(current, previous) {
-   var now = new Date();
-   console.log("New image emitted " + now.toTimeString());
-   io.sockets.emit('liveStream', imgUrlPath + '?_t=' + now.toTimeString());
-   })
-   */
-  //Change from watchFile to watch
-  startWatch();
+    /*
+     fs.watchFile(imgPath, function(current, previous) {
+     var now = new Date();
+     console.log("New image emitted " + now.toTimeString());
+     io.sockets.emit('liveStream', imgUrlPath + '?_t=' + now.toTimeString());
+     })
+     */
+    //Change from watchFile to watch
+    startWatch();
+  });
 };
 
 startWatch = function(){
