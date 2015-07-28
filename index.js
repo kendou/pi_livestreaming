@@ -43,8 +43,14 @@ startStreaming = function(io) {
    "-q 50": jpeg quality 50%
    "> /home/pi/camera.log 2>&1": logs
    */
-  var args = ["-w", "320", "-h", "240", "-o", imgPath, "-t", "999999999", "-tl", "1000", "-n", ">/tmp/camera.log", "2>&1"];
+  var args = ["-w", "320", "-h", "240", "-o", imgPath, "-t", "999999999", "-tl", "1000", "-n"];
   proc = spawn('raspistill', args);
+  proc.stdout.on('data', function(data){
+    console.log("[raspistill] " + data);
+  });
+  proc.stderr.on('data', function(data){
+    console.log("[raspistill error] " + data);
+  });
   proc.on('exit', function(code, signal){
     //if "raspistill" process ends for any reason, stop watching
     console.log("raspistill exited with code:" + code);
