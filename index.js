@@ -113,7 +113,9 @@ var sockets = {};
 io.on('connection', function(socket) {
 
   sockets[socket.id] = socket;
-  console.log("Total clients connected : ", Object.keys(sockets).length);
+
+  console.log("Connected from " + socket.request.connection.remoteAddress
+    + " Total clients connected : ", Object.keys(sockets).length);
 
   socket.on('disconnect', function() {
     delete sockets[socket.id];
