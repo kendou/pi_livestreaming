@@ -157,11 +157,11 @@ io.on('connection', function(socket) {
   sockets[socket.id] = socket;
 
   writeLog("Connected from " + socket.request.connection.remoteAddress
-    + " Total clients connected : ", Object.keys(sockets).length);
+    + " Total clients connected : " + Object.keys(sockets).length);
 
   socket.on('disconnect', function() {
     delete sockets[socket.id];
-    writeLog("Total clients connected : ", Object.keys(sockets).length);
+    writeLog("Total clients connected : " + Object.keys(sockets).length);
 
     // no more sockets, kill the stream
     if (Object.keys(sockets).length == 0) {
