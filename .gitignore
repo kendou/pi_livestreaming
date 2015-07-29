@@ -11,3 +11,7 @@ config.js
 npm-debug.log
 
 .idea/pi_livestreaming.iml
+
+*.log
+
+*.log

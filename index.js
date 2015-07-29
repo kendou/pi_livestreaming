@@ -124,8 +124,10 @@ nconf.argv()
   .env()
   .file({ file: './config.json' });
 //Set default values
-nconf.set('port',3000);
-nconf.set('fakemode', false);
+nconf.defaults({
+  'port': 3000,
+  'fakemode': false
+})
 
 //do something when app is closing
 process.on('SIGTERM', function(){
