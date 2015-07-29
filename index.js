@@ -31,7 +31,7 @@ stopStreaming = function() {
 };
 
 startStreaming = function(io) {
-  if(nconf.get('fakeMode') == true){
+  if(nconf.get('fakemode') == true){
     io.sockets.emit('liveStream', imgUrlPathFakeMode);
     return;
   }
