@@ -84,7 +84,7 @@ startStreaming = function(io) {
 
 writeLog = function(logStr){
   var now = new Date();
-  var timeString = "[" + now.getFullYear() + "/" + now.getMonth() + "/" + now.getDay()
+  var timeString = "[" + now.getFullYear() + "/" + (now.getMonth() + 1) + "/" + now.getDate()
     + " " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + "]";
   console.log(timeString + logStr);
 };
