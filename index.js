@@ -6,7 +6,7 @@ var fs = require('fs');
 var path = require('path');
 var child_process = require('child_process');
 var spawn = child_process.spawn;
-var config = require('./config');
+var nconf = require('nconf');
 
 var proc;
 var fileWatcher = null;
@@ -31,7 +31,7 @@ stopStreaming = function() {
 };
 
 startStreaming = function(io) {
-  if(config.fakeMode === true){
+  if(nconf.get('fakeMode') === true){
     io.sockets.emit('liveStream', imgUrlPathFakeMode);
     return;
   }
@@ -119,6 +119,13 @@ stopWatch = function(){
 };
 
 ///////////////////////////////////////////////////////End Utility Methods
+//Initializing config file
+nconf.argv()
+  .env()
+  .file({ file: './config.json' });
+//Set default values
+nconf.set('port',3000);
+nconf.set('fakemode', false);
 
 //do something when app is closing
 process.on('SIGTERM', function(){
@@ -166,8 +173,8 @@ io.on('connection', function(socket) {
 
 });
 
-http.listen(config.port, function() {
-  writeLog('listening on *:' + config.port);
+http.listen(nconf.get('port'), function() {
+  writeLog('listening on *:' + nconf.get('port'));
 });
 
 
