@@ -6,19 +6,22 @@ var fs = require('fs');
 var path = require('path');
 var child_process = require('child_process');
 var spawn = child_process.spawn;
+var config = require('./config');
 
 var proc;
 var fileWatcher = null;
 var imgPath = "public/img/image_stream.jpg";
 var imgUrlPath = "img/image_stream.jpg";
+var imgUrlPathFakeMode = "img2/peep.jpg";
 var startStreaming;
 var stopStreaming;
 var startWatch;
 var stopWatch;
+var writeLog;
 
 //////////////////////////////////////////////////////Begin utility methods
 stopStreaming = function() {
-  console.log("stopping streaming ...");
+  writeLog("stopping streaming ...");
   if (proc) {
     proc.kill();
     proc = null;
@@ -28,6 +31,10 @@ stopStreaming = function() {
 };
 
 startStreaming = function(io) {
+  if(config.fakeMode === true){
+    io.sockets.emit('liveStream', imgUrlPathFakeMode);
+    return;
+  }
 
   if (app.get('watchingFile')) {
     io.sockets.emit('liveStream', imgUrlPath);
@@ -50,23 +57,23 @@ startStreaming = function(io) {
     var args = ["-w", "320", "-h", "240", "-o", imgPath, "-t", "999999999", "-tl", "1000", "-n"];
     proc = spawn('raspistill', args);
     proc.stdout.on('data', function(data){
-      console.log("[raspistill] " + data);
+      writeLog("[raspistill] " + data);
     });
     proc.stderr.on('data', function(data){
-      console.log("[raspistill error] " + data);
+      writeLog("[raspistill error] " + data);
     });
     proc.on('exit', function(code, signal){
       //if "raspistill" process ends for any reason, stop watching
-      console.log("raspistill exited with code:" + code);
+      writeLog("raspistill exited with code:" + code);
       stopWatch();
     });
 
-    console.log('Watching for changes...');
+    writeLog('Watching for changes...');
 
     /*
      fs.watchFile(imgPath, function(current, previous) {
      var now = new Date();
-     console.log("New image emitted " + now.toTimeString());
+     writeLog("New image emitted " + now.toTimeString());
      io.sockets.emit('liveStream', imgUrlPath + '?_t=' + now.toTimeString());
      })
      */
@@ -75,11 +82,18 @@ startStreaming = function(io) {
   });
 };
 
+writeLog = function(logStr){
+  var now = new Date();
+  var timeString = "[" + now.getFullYear() + "/" + now.getMonth() + "/" + now.getDay()
+    + " " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + "]";
+  console.log(timeString + logStr);
+};
+
 startWatch = function(){
   var watchCallback = function(event, filename){
     if( 'change' === event) {
       var now = new Date();
-//      console.log("New image emitted " + now.toTimeString());
+//      writeLog("New image emitted ");
       io.sockets.emit('liveStream', imgUrlPath + '?_t=' + now.toTimeString());
     }
     else if( 'rename' === event) {
@@ -89,15 +103,15 @@ startWatch = function(){
     }
   };
 
-//  console.log("current directory:" + process.cwd() + ", about to watch: " + imgPath);
+//  writeLog("current directory:" + process.cwd() + ", about to watch: " + imgPath);
   fileWatcher = fs.watch(imgPath, {persistent: true}, watchCallback);
-  console.log("Start to watch the image file.");
+  writeLog("Start to watch the image file.");
   app.set('watchingFile', true);
 };
 
 stopWatch = function(){
   if(fileWatcher){
-    console.log("Stop watching the image file.")
+    writeLog("Stop watching the image file.")
     fileWatcher.close();
     fileWatcher = null;
   }
@@ -108,13 +122,13 @@ stopWatch = function(){
 
 //do something when app is closing
 process.on('SIGTERM', function(){
-  console.log("node application exiting, cleaning up ...");
+  writeLog("node application exiting, cleaning up ...");
   stopStreaming();
   process.exit(0);
 });
 
 process.on('exit', function(code){
-  console.log("node about to exit with code:" + code);
+  writeLog("node about to exit with code:" + code);
   stopStreaming();
 });
 
@@ -133,12 +147,12 @@ io.on('connection', function(socket) {
 
   sockets[socket.id] = socket;
 
-  console.log("Connected from " + socket.request.connection.remoteAddress
+  writeLog("Connected from " + socket.request.connection.remoteAddress
     + " Total clients connected : ", Object.keys(sockets).length);
 
   socket.on('disconnect', function() {
     delete sockets[socket.id];
-    console.log("Total clients connected : ", Object.keys(sockets).length);
+    writeLog("Total clients connected : ", Object.keys(sockets).length);
 
     // no more sockets, kill the stream
     if (Object.keys(sockets).length == 0) {
@@ -152,8 +166,8 @@ io.on('connection', function(socket) {
 
 });
 
-http.listen(3000, function() {
-  console.log('listening on *:3000');
+http.listen(config.port, function() {
+  writeLog('listening on *:' + config.port);
 });
 
 
