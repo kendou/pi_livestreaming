@@ -1,17 +1,11 @@
 
 # idea IDE files
 .idea/
+.idea/**/*
 
 # node.js modules
 node_modules/
 
 config.js
-
-
-npm-debug.log
-
-.idea/pi_livestreaming.iml
-
-*.log
 
 *.log
