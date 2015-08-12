@@ -14,7 +14,8 @@ Usage
   {    
       "port": 3000,  
       "fakemode": false    
-  }```
+  }
+```
 - Run 'node index.js', and use a browser to access: `http://<RPI-address>:3000/`
 - Recommend: use 'sueprvisord' to start/stop/monitor your node.js application. That will make your life much easier!
 
