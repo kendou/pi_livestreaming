@@ -1,7 +1,7 @@
 pi_livestreaming
 ================
 
-[Raspberry Pi, Camera and Node.js – Live Streaming with Websockets #IoT original post](http://thejackalofjavascript.com/rpi-live-streaming)
+Derived from [Raspberry Pi, Camera and Node.js – Live Streaming with Websockets #IoT original post](http://thejackalofjavascript.com/rpi-live-streaming)
 
 Usage
 ------------
@@ -10,11 +10,12 @@ Usage
 - Create an 'img' directory under 'public' folder; or link a [Ramdisk](https://wiki.archlinux.org/index.php/Tmpfs) folder to public/img.
   The latter is recommended since that will reduce frequent writes on your SD card.
 - Optionally, create a 'config.json' in the project folder, including below content:
-  {
-      "port": 3000,
-      "fakemode": false;
-  }
-- Run 'node index.js', and use a browser to access: http://<RPI-address>:3000/
+- ```
+  {    
+      "port": 3000,  
+      "fakemode": false    
+  }```
+- Run 'node index.js', and use a browser to access: `http://<RPI-address>:3000/`
 - Recommend: use 'sueprvisord' to start/stop/monitor your node.js application. That will make your life much easier!
 
 Enhancements
