@@ -10,7 +10,7 @@ Usage
 - Create an 'img' directory under 'public' folder; or link a [Ramdisk](https://wiki.archlinux.org/index.php/Tmpfs) folder to public/img.
   The latter is recommended since that will reduce frequent writes on your SD card.
 - Optionally, create a 'config.json' in the project folder, including below content:
-- ```
+```
   {    
       "port": 3000,  
       "fakemode": false    
